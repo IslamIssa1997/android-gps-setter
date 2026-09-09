@@ -3,6 +3,10 @@
 All notable changes to this project are documented here. Format based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project uses date-stamped versions.
 
+## [2.1.1] — 2026-09-09
+
+**Full Changelog**: https://github.com/IslamIssa1997/android-gps-setter/commits/v2.1.1
+
 ## [2.0.0] — 2026-09
 
 Full rebuild of the module on the modern Xposed API, plus a large feature set. Packaged as
@@ -40,3 +44,4 @@ Full rebuild of the module on the modern Xposed API, plus a large feature set. P
 - The red pin persists across restarts once a location has been placed.
 
 [2.0.0]: https://github.com/IslamIssa1997/android-gps-setter/releases
+[2.1.1]: https://github.com/IslamIssa1997/android-gps-setter/releases/tag/v2.1.1
