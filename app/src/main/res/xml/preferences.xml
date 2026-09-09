@@ -1,0 +1,361 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory android:title="@string/preference_category_general">
+
+        <DropDownPreference
+            android:defaultValue="-1"
+            android:entries="@array/theme_texts"
+            android:entryValues="@array/theme_values"
+            android:icon="@drawable/ic_dark_mode"
+            android:key="dark_theme"
+            android:summary="%s"
+            android:title="@string/dark_theme" />
+
+        <DropDownPreference
+            android:title="Map"
+            android:summary="%s"
+            android:icon="@drawable/ic_map_type"
+            android:key="map_type"
+            android:dialogTitle="Map type"
+            android:entries="@array/map_type"
+            android:entryValues="@array/map_value"
+            android:defaultValue="1" />
+
+        <SwitchPreferenceCompat
+            android:layout="@layout/preference_with_info"
+            android:title="@string/check_update"
+            android:summary="@string/check_update_summary"
+            android:icon="@drawable/ic_update"
+            android:widgetLayout="@layout/preference_switch_widget"
+            android:key="update_disabled"
+            android:defaultValue="false" />
+
+        <Preference
+            android:layout="@layout/preference_with_info"
+            android:title="@string/check_now_title"
+            android:summary="@string/check_now_summary"
+            android:icon="@drawable/ic_update"
+            android:key="check_now" />
+
+        <Preference
+            android:layout="@layout/preference_with_info"
+            android:title="@string/enable_joystick"
+            android:summary="@string/enable_joystick_summary"
+            android:icon="@drawable/ic_joystick"
+            android:key="joystick_enabled"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/xposed">
+
+        <SwitchPreferenceCompat
+            android:layout="@layout/preference_with_info"
+            android:title="@string/advanced_hook"
+            android:summary="@string/advanced_summary"
+            android:key="system_hooked"
+            android:icon="@drawable/ic_advanced_hook"
+            android:widgetLayout="@layout/preference_switch_widget"
+            android:defaultValue="true"
+        />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/category_location">
+
+        <DropDownPreference
+            android:key="mode_randomize"
+            android:title="@string/setting_randomize_radius"
+            android:summary="@string/setting_randomize_radius_summary"
+            android:icon="@drawable/ic_random_position"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="randomize_radius"
+            android:title="@string/setting_randomize_radius"
+            android:max="2000"
+            android:defaultValue="35"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+        <DropDownPreference
+            android:key="mode_accuracy"
+            android:title="@string/setting_horizontal_accuracy"
+            android:summary="@string/setting_horizontal_accuracy_summary"
+            android:icon="@drawable/ic_accuracy"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="accuracy_value"
+            android:title="@string/setting_horizontal_accuracy"
+            android:max="100"
+            android:defaultValue="10"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+        <DropDownPreference
+            android:key="mode_vertical_accuracy"
+            android:title="@string/setting_vertical_accuracy"
+            android:summary="@string/setting_vertical_accuracy_summary"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="vertical_accuracy"
+            android:title="@string/setting_vertical_accuracy"
+            android:max="100"
+            android:defaultValue="0"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_altitude">
+
+        <DropDownPreference
+            android:key="mode_altitude"
+            android:title="@string/setting_altitude"
+            android:summary="@string/setting_altitude_summary"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="altitude"
+            android:title="@string/setting_altitude"
+            android:max="2000"
+            android:defaultValue="0"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+        <DropDownPreference
+            android:key="mode_msl"
+            android:title="@string/setting_msl"
+            android:summary="@string/setting_msl_summary"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="msl"
+            android:title="@string/setting_msl"
+            android:max="2000"
+            android:defaultValue="0"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+        <DropDownPreference
+            android:key="mode_msl_accuracy"
+            android:title="@string/setting_msl_accuracy"
+            android:summary="@string/setting_msl_accuracy_summary"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="msl_accuracy"
+            android:title="@string/setting_msl_accuracy"
+            android:max="100"
+            android:defaultValue="0"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_movement">
+
+        <DropDownPreference
+            android:key="mode_speed"
+            android:title="@string/setting_speed"
+            android:summary="@string/setting_speed_summary"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="speed"
+            android:title="@string/setting_speed"
+            android:max="200"
+            android:defaultValue="0"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+        <DropDownPreference
+            android:key="mode_speed_accuracy"
+            android:title="@string/setting_speed_accuracy"
+            android:summary="@string/setting_speed_accuracy_summary"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="speed_accuracy"
+            android:title="@string/setting_speed_accuracy"
+            android:max="50"
+            android:defaultValue="0"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+        <DropDownPreference
+            android:key="mode_bearing"
+            android:title="@string/setting_bearing"
+            android:summary="@string/setting_bearing_summary"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="bearing"
+            android:title="@string/setting_bearing"
+            android:max="359"
+            android:defaultValue="0"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+        <DropDownPreference
+            android:key="mode_bearing_accuracy"
+            android:title="@string/setting_bearing_accuracy"
+            android:summary="@string/setting_bearing_accuracy_summary"
+            android:entries="@array/value_mode_texts"
+            android:entryValues="@array/value_mode_values"
+            android:defaultValue="2" />
+
+        <SeekBarPreference
+            android:key="bearing_accuracy"
+            android:title="@string/setting_bearing_accuracy"
+            android:max="90"
+            android:defaultValue="0"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_targeting">
+
+        <Preference
+            android:layout="@layout/preference_with_info"
+            android:key="target_apps"
+            android:title="@string/setting_target_apps"
+            android:summary="@string/setting_target_apps_summary"
+            android:icon="@drawable/ic_advanced_hook" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_wifi">
+
+        <SwitchPreferenceCompat
+            android:layout="@layout/preference_with_info"
+            android:key="enable_wifi_identity"
+            android:title="@string/setting_wifi_identity"
+            android:summary="@string/setting_wifi_identity_summary"
+            android:widgetLayout="@layout/preference_switch_widget"
+            android:defaultValue="false" />
+
+        <EditTextPreference
+            android:layout="@layout/preference_with_info"
+            android:key="wifi_ssid"
+            android:title="@string/setting_wifi_ssid"
+            android:dependency="enable_wifi_identity"
+            android:defaultValue="AndroidAP"
+            android:summary="%s" />
+
+        <EditTextPreference
+            android:layout="@layout/preference_with_info"
+            android:key="wifi_bssid"
+            android:title="@string/setting_wifi_bssid"
+            android:dependency="enable_wifi_identity"
+            android:defaultValue="02:00:00:00:00:00"
+            android:summary="%s" />
+
+        <SeekBarPreference
+            android:key="wifi_rssi"
+            android:title="@string/setting_wifi_rssi"
+            android:dependency="enable_wifi_identity"
+            android:max="0"
+            android:defaultValue="-60"
+            app:min="-127"
+            app:showSeekBarValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_external">
+
+        <SwitchPreferenceCompat
+            android:layout="@layout/preference_with_info"
+            android:key="enable_broadcast_control"
+            android:title="@string/setting_broadcast"
+            android:summary="@string/setting_broadcast_summary"
+            android:widgetLayout="@layout/preference_switch_widget"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_data">
+
+        <Preference
+            android:layout="@layout/preference_with_info"
+            android:key="favorites_export"
+            android:title="@string/setting_favorites_export"
+            android:summary="@string/setting_favorites_export_summary" />
+
+        <Preference
+            android:layout="@layout/preference_with_info"
+            android:key="favorites_import"
+            android:title="@string/setting_favorites_import"
+            android:summary="@string/setting_favorites_import_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_advanced">
+
+        <SwitchPreferenceCompat
+            android:layout="@layout/preference_with_info"
+            android:key="fake_gnss"
+            android:title="@string/setting_fake_gnss"
+            android:summary="@string/setting_fake_gnss_summary"
+            android:widgetLayout="@layout/preference_switch_widget"
+            android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            android:layout="@layout/preference_with_info"
+            android:key="block_geofence"
+            android:title="@string/setting_block_geofence"
+            android:summary="@string/setting_block_geofence_summary"
+            android:widgetLayout="@layout/preference_switch_widget"
+            android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            android:layout="@layout/preference_with_info"
+            android:key="hide_active_toast"
+            android:title="@string/setting_hide_toast"
+            android:summary="@string/setting_hide_toast_summary"
+            android:widgetLayout="@layout/preference_switch_widget"
+            android:defaultValue="false" />
+
+        <DropDownPreference
+            android:key="language_tag"
+            android:title="@string/setting_language"
+            android:summary="%s"
+            android:entries="@array/language_texts"
+            android:entryValues="@array/language_values"
+            android:defaultValue="" />
+
+        <SwitchPreferenceCompat
+            android:layout="@layout/preference_with_info"
+            android:key="verbose_log"
+            android:title="@string/setting_verbose_log"
+            android:summary="@string/setting_verbose_log_summary"
+            android:widgetLayout="@layout/preference_switch_widget"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

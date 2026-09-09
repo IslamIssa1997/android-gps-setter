@@ -1,0 +1,500 @@
+package io.github.jqssun.gpssetter.ui
+
+import android.app.Dialog
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import io.github.jqssun.gpssetter.R
+import io.github.jqssun.gpssetter.data.*
+import io.github.jqssun.gpssetter.databinding.AutoNavigationDialogBinding
+import io.github.jqssun.gpssetter.databinding.NavigationControlDialogBinding
+import io.github.jqssun.gpssetter.utils.NavigationService
+import io.github.jqssun.gpssetter.utils.RoutingWaypoint
+import io.github.jqssun.gpssetter.utils.ext.showToast
+import timber.log.Timber
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
+
+class AutoNavigationDialog(
+    private val context: BaseMapActivity,
+    private val currentLat: Double,
+    private val currentLon: Double
+) {
+
+    private var navigationService: NavigationService? = null
+    private var serviceBound = false
+    private var setupDialog: AlertDialog? = null
+    private var controlDialog: AlertDialog? = null
+    private var isSelectingStartPoint = false
+    private var isSelectingEndPoint = false
+    private var dialogBinding: AutoNavigationDialogBinding? = null
+
+    /** Points drawn on the map in Z-mode, waiting to pre-fill the dialog when it reopens. */
+    private var pendingDrawnPoints: List<Pair<Double, Double>>? = null
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as NavigationService.NavigationBinder
+            navigationService = binder.getService()
+            serviceBound = true
+            observeNavigationState()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            navigationService = null
+            serviceBound = false
+        }
+    }
+
+    fun show() {
+        bindNavigationService()
+        showSetupDialog()
+    }
+
+    private fun bindNavigationService() {
+        if (!serviceBound) {
+            val intent = Intent(context, NavigationService::class.java)
+            context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    private fun unbindNavigationService() {
+        if (serviceBound) {
+            context.unbindService(serviceConnection)
+            serviceBound = false
+        }
+    }
+
+    private fun showSetupDialog() {
+        val binding = AutoNavigationDialogBinding.inflate(LayoutInflater.from(context))
+        dialogBinding = binding
+
+        // Pre-fill from a route drawn on the map (Z-mode) if there is one, else current location.
+        val drawn = pendingDrawnPoints
+        pendingDrawnPoints = null
+        if (drawn != null && drawn.size >= 2) {
+            binding.startLatInput.setText(drawn.first().first.toString())
+            binding.startLonInput.setText(drawn.first().second.toString())
+            binding.endLatInput.setText(drawn.last().first.toString())
+            binding.endLonInput.setText(drawn.last().second.toString())
+            // Middle taps become intermediate stops, one "lat, lon" per line.
+            binding.waypointsInput.setText(
+                drawn.subList(1, drawn.size - 1)
+                    .joinToString("\n") { "${it.first}, ${it.second}" }
+            )
+        } else {
+            binding.startLatInput.setText(currentLat.toString())
+            binding.startLonInput.setText(currentLon.toString())
+        }
+
+        binding.drawRouteOnMapBtn.setOnClickListener {
+            setupDialog?.dismiss()
+            context.beginRouteDrawing { points ->
+                pendingDrawnPoints = points
+                showSetupDialog()
+            }
+        }
+
+        // Setup speed spinner
+        val speedOptions = NavigationSpeed.values().map { it.displayName }
+        val speedAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, speedOptions)
+        binding.speedSpinner.setAdapter(speedAdapter)
+        binding.speedSpinner.setText(NavigationSpeed.WALKING.displayName, false)
+
+        // Handle speed selection
+        binding.speedSpinner.setOnItemClickListener { _, _, position, _ ->
+            val selectedSpeed = NavigationSpeed.values()[position]
+            if (selectedSpeed == NavigationSpeed.CUSTOM) {
+                binding.customSpeedLayout.visibility = View.VISIBLE
+            } else {
+                binding.customSpeedLayout.visibility = View.GONE
+            }
+        }
+
+        // "Use current location" = the device's REAL position (async fetch).
+        binding.useCurrentStartBtn.setOnClickListener {
+            context.fetchRealLocation { lat, lon ->
+                binding.startLatInput.setText(lat.toString())
+                binding.startLonInput.setText(lon.toString())
+            }
+        }
+        binding.useCurrentEndBtn.setOnClickListener {
+            context.fetchRealLocation { lat, lon ->
+                binding.endLatInput.setText(lat.toString())
+                binding.endLonInput.setText(lon.toString())
+            }
+        }
+
+        // "Use spoofed location" = the current pin (the fake position), for routing from/to it.
+        binding.useSpoofedStartBtn.setOnClickListener {
+            binding.startLatInput.setText(currentLat.toString())
+            binding.startLonInput.setText(currentLon.toString())
+        }
+        binding.useSpoofedEndBtn.setOnClickListener {
+            binding.endLatInput.setText(currentLat.toString())
+            binding.endLonInput.setText(currentLon.toString())
+        }
+
+        // Select start point on map
+        binding.selectStartOnMapBtn.setOnClickListener {
+            isSelectingStartPoint = true
+            isSelectingEndPoint = false
+            setupDialog?.hide() // Hide dialog to show map
+            context.showToast("Tap on the map to select start point")
+            context.setMapClickMode(true) { lat, lon ->
+                binding.startLatInput.setText(lat.toString())
+                binding.startLonInput.setText(lon.toString())
+                isSelectingStartPoint = false
+                context.setMapClickMode(false, null)
+                context.showToast("Start point selected")
+                if (!context.isFinishing && !context.isDestroyed) {
+                    setupDialog?.show() // Show dialog again
+                }
+            }
+        }
+
+        // Select end point on map
+        binding.selectEndOnMapBtn.setOnClickListener {
+            isSelectingStartPoint = false
+            isSelectingEndPoint = true
+            setupDialog?.hide() // Hide dialog to show map
+            context.showToast("Tap on the map to select end point")
+            context.setMapClickMode(true) { lat, lon ->
+                binding.endLatInput.setText(lat.toString())
+                binding.endLonInput.setText(lon.toString())
+                isSelectingEndPoint = false
+                context.setMapClickMode(false, null)
+                context.showToast("End point selected")
+                if (!context.isFinishing && !context.isDestroyed) {
+                    setupDialog?.show() // Show dialog again
+                }
+            }
+        }
+
+        // Create dialog
+        setupDialog = MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.auto_navigation)
+            .setView(binding.root)
+            .setCancelable(true)
+            .setOnCancelListener {
+                // Clean up if user cancels while in selection mode
+                context.setMapClickMode(false, null)
+                isSelectingStartPoint = false
+                isSelectingEndPoint = false
+            }
+            .create()
+
+        // Handle buttons
+        binding.cancelBtn.setOnClickListener {
+            context.setMapClickMode(false, null)
+            isSelectingStartPoint = false
+            isSelectingEndPoint = false
+            setupDialog?.dismiss()
+        }
+
+        binding.startNavigationBtn.setOnClickListener {
+            if (validateInputs(binding)) {
+                val route = createRouteFromInputs(binding)
+                startNavigation(route)
+                setupDialog?.dismiss()
+            }
+        }
+
+        setupDialog?.show()
+    }
+
+    private fun validateInputs(binding: AutoNavigationDialogBinding): Boolean {
+        try {
+            val startLat = binding.startLatInput.text.toString().toDoubleOrNull()
+            val startLon = binding.startLonInput.text.toString().toDoubleOrNull()
+            val endLat = binding.endLatInput.text.toString().toDoubleOrNull()
+            val endLon = binding.endLonInput.text.toString().toDoubleOrNull()
+
+            if (startLat == null || startLon == null || endLat == null || endLon == null) {
+                context.showToast(context.getString(R.string.invalid_coordinates))
+                return false
+            }
+
+            if (startLat < -90 || startLat > 90 || endLat < -90 || endLat > 90) {
+                context.showToast(context.getString(R.string.invalid_coordinates))
+                return false
+            }
+
+            if (startLon < -180 || startLon > 180 || endLon < -180 || endLon > 180) {
+                context.showToast(context.getString(R.string.invalid_coordinates))
+                return false
+            }
+
+            return true
+        } catch (e: Exception) {
+            context.showToast(context.getString(R.string.invalid_coordinates))
+            return false
+        }
+    }
+
+    private fun createRouteFromInputs(binding: AutoNavigationDialogBinding): NavigationRoute {
+        val routeName = binding.routeNameInput.text.toString().ifEmpty { "Auto Route" }
+
+        val startLat = binding.startLatInput.text.toString().toDouble()
+        val startLon = binding.startLonInput.text.toString().toDouble()
+        val endLat = binding.endLatInput.text.toString().toDouble()
+        val endLon = binding.endLonInput.text.toString().toDouble()
+
+        val startPoint = RoutePoint(startLat, startLon, "Start")
+        val endPoint = RoutePoint(endLat, endLon, "End")
+
+        // Get selected speed
+        val selectedSpeedText = binding.speedSpinner.text.toString()
+        val speed = if (selectedSpeedText == NavigationSpeed.CUSTOM.displayName) {
+            // The field is entered in km/h (intuitive); the route works in m/s, so convert.
+            val kmh = binding.customSpeedInput.text.toString().toFloatOrNull()
+            if (kmh != null && kmh > 0f) kmh / 3.6f else NavigationSpeed.WALKING.value
+        } else {
+            NavigationSpeed.values().find { it.displayName == selectedSpeedText }?.value ?: NavigationSpeed.WALKING.value
+        }
+
+        // Get duration
+        val minutes = binding.durationMinutesInput.text.toString().toIntOrNull() ?: 0
+        val seconds = binding.durationSecondsInput.text.toString().toIntOrNull() ?: 0
+        val duration = (minutes * 60 + seconds) * 1000L // Convert to milliseconds
+
+        val isRepeating = binding.repeatRouteSwitch.isChecked
+
+        // Optional intermediate stops, one "lat, lon" per line. Malformed lines are skipped.
+        val stops = binding.waypointsInput.text?.toString().orEmpty()
+            .lineSequence()
+            .mapNotNull { line ->
+                val parts = line.split(",").map { it.trim() }
+                val la = parts.getOrNull(0)?.toDoubleOrNull()
+                val lo = parts.getOrNull(1)?.toDoubleOrNull()
+                if (la != null && lo != null && la in -90.0..90.0 && lo in -180.0..180.0) {
+                    RoutePoint(la, lo)
+                } else null
+            }
+            .toList()
+
+        return NavigationRoute(
+            name = routeName,
+            startPoint = startPoint,
+            endPoint = endPoint,
+            waypoints = stops,
+            speed = speed,
+            duration = duration,
+            isRepeating = isRepeating
+        )
+    }
+
+    private fun startNavigation(route: NavigationRoute) {
+        navigationService?.let { service ->
+            service.startNavigation(route)
+            context.showToast(context.getString(R.string.route_started))
+
+            setupDialog?.dismiss() // Close the setup dialog
+            // The route visualization will be handled by observing waypoints in MapActivity
+        }
+    }
+
+    private fun showControlDialog() {
+        // Check if activity is still alive and not finishing
+        if (context.isFinishing || context.isDestroyed) {
+            return
+        }
+
+        val binding = NavigationControlDialogBinding.inflate(LayoutInflater.from(context))
+
+        controlDialog = MaterialAlertDialogBuilder(context)
+            .setView(binding.root)
+            .setCancelable(false)
+            .create()
+
+        // Update UI with current navigation state
+        updateControlDialogUI(binding)
+
+        // Handle control buttons
+        binding.pauseResumeBtn.setOnClickListener {
+            navigationService?.let { service ->
+                when (service.navigationState.value) {
+                    NavigationState.RUNNING -> {
+                        service.pauseNavigation()
+                        context.showToast(context.getString(R.string.route_paused))
+                    }
+                    NavigationState.PAUSED -> {
+                        service.resumeNavigation()
+                        context.showToast(context.getString(R.string.route_resumed))
+                    }
+                    else -> {}
+                }
+            }
+        }
+
+        binding.stopNavigationBtn.setOnClickListener {
+            navigationService?.stopNavigation()
+            context.showToast(context.getString(R.string.route_stopped))
+            // Dialog will be dismissed automatically by observeNavigationState when STOPPED state is received
+        }
+
+        // Only show dialog if activity is still alive
+        if (!context.isFinishing && !context.isDestroyed) {
+            controlDialog?.show()
+        }
+    }
+
+    private fun observeNavigationState() {
+        navigationService?.let { service ->
+            context.lifecycleScope.launch {
+                service.navigationState.collect { state ->
+                    when (state) {
+                        NavigationState.RUNNING -> {
+                            // Let the existing start/stop button system handle the UI
+                            context.handleNavigationRunning()
+                        }
+                        NavigationState.STOPPED -> {
+                            context.handleNavigationStopped()
+                        }
+                        NavigationState.PAUSED -> {
+                            // Handle pause state if needed
+                        }
+                    }
+                }
+            }
+
+            // Observe waypoints for route visualization
+            context.lifecycleScope.launch {
+                service.currentRouteWaypoints.collect { waypoints ->
+                    Timber.d("Received ${waypoints.size} waypoints for route visualization")
+                    if (waypoints.isNotEmpty()) {
+                        showWaypointsOnMap(waypoints)
+                    } else {
+                        Timber.d("No waypoints received - route may be using straight line fallback")
+                    }
+                }
+            }
+
+            context.lifecycleScope.launch {
+                service.currentPosition.collect { position ->
+                    position?.let {
+                        // Update the GPS location in the main activity
+                        context.updateGPSLocation(it.latitude, it.longitude)
+                    }
+                }
+            }
+
+            context.lifecycleScope.launch {
+                service.navigationProgress.collect { progress ->
+                    progress?.let {
+                        // Update the progress bar in the main activity
+                        context.updateNavigationProgress(it.progressPercentage.toInt())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateControlDialogUI(binding: NavigationControlDialogBinding) {
+        navigationService?.let { service ->
+            context.lifecycleScope.launch {
+                service.currentRoute.collect { route ->
+                    route?.let {
+                        binding.routeNameText.text = it.name
+                    }
+                }
+            }
+
+            context.lifecycleScope.launch {
+                service.navigationProgress.collect { progress ->
+                    progress?.let {
+                        binding.progressText.text = "${it.progressPercentage.toInt()}%"
+                        binding.progressBar.progress = it.progressPercentage.toInt()
+                        binding.elapsedTimeText.text = formatTime(it.elapsedTime)
+                        binding.remainingTimeText.text = formatTime(it.remainingTime)
+                        binding.currentPositionText.text = String.format(
+                            "%.6f, %.6f",
+                            it.currentPosition.latitude,
+                            it.currentPosition.longitude
+                        )
+                    }
+                }
+            }
+
+            context.lifecycleScope.launch {
+                service.navigationState.collect { state ->
+                    binding.pauseResumeBtn.text = when (state) {
+                        NavigationState.RUNNING -> context.getString(R.string.pause_navigation)
+                        NavigationState.PAUSED -> context.getString(R.string.resume_navigation)
+                        else -> context.getString(R.string.pause_navigation)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun formatTime(milliseconds: Long): String {
+        val totalSeconds = milliseconds / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format("%02d:%02d", minutes, seconds)
+    }
+
+    private fun showWaypointsOnMap(waypoints: List<RoutingWaypoint>) {
+        try {
+            Timber.d("Attempting to show ${waypoints.size} waypoints on map")
+            // Convert RoutingWaypoint to the appropriate LatLng type for each MapActivity variant
+            val mapActivity = context as? io.github.jqssun.gpssetter.ui.MapActivity
+            if (mapActivity != null) {
+                // Convert to the right LatLng type based on the MapActivity implementation
+                val latLngList = waypoints.map { waypoint ->
+                    // This will work for both Google Maps and MapLibre since they both use LatLng
+                    // but the actual type will be determined by the import in each MapActivity
+                    CustomLatLng(waypoint.latitude, waypoint.longitude)
+                }
+                Timber.d("Converted waypoints to LatLng list, calling showRouteWithWaypoints")
+                mapActivity.showRouteWithWaypoints(latLngList)
+                Timber.d("Successfully called showRouteWithWaypoints")
+            } else {
+                Timber.w("MapActivity cast failed - context is not MapActivity")
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Error showing waypoints on map")
+            // Fallback to simple route display if waypoint display fails
+            navigationService?.currentRoute?.value?.let { route ->
+                Timber.d("Falling back to simple straight line route display")
+                context.showRouteOnMap(
+                    route.startPoint.latitude,
+                    route.startPoint.longitude,
+                    route.endPoint.latitude,
+                    route.endPoint.longitude
+                )
+            }
+        }
+    }
+
+    fun stopNavigation() {
+        navigationService?.stopNavigation()
+    }
+
+    fun cleanup() {
+        try {
+            setupDialog?.dismiss()
+            setupDialog = null
+            controlDialog?.dismiss()
+            controlDialog = null
+            context.setMapClickMode(false, null)
+            dialogBinding = null
+            isSelectingStartPoint = false
+            isSelectingEndPoint = false
+        } catch (e: Exception) {
+            // Ignore exceptions during cleanup
+        } finally {
+            unbindNavigationService()
+        }
+    }
+}

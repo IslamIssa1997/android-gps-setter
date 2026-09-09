@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/floating_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#DD202124">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/floating_mapview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Small drag grip (no title bar). Drag it to move the window, or down to the bottom to close. -->
+    <ImageView
+        android:id="@+id/floating_drag_bar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_margin="6dp"
+        android:background="@drawable/badge_background"
+        android:padding="8dp"
+        android:src="@android:drawable/ic_menu_compass"
+        android:contentDescription="@string/floating_map_title" />
+
+    <!-- Resize handle, bottom-right -->
+    <ImageView
+        android:id="@+id/floating_resize"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_gravity="bottom|end"
+        android:src="@android:drawable/ic_menu_crop"
+        android:contentDescription="@string/floating_resize"
+        android:background="#553F51B5" />
+
+</FrameLayout>

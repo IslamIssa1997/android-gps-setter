@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search">بحث</string>
+    <string name="favorites">المفضلة</string>
+    <string name="address_not_found">لم يتم العثور على العنوان</string>
+    <string name="cant_save">تعذر الحفظ</string>
+    <string name="location_set">تم تعيين الموقع</string>
+    <string name="title">إشعار تعيين الموقع</string>
+    <string name="des">إظهار إشعار عند تعيين الموقع</string>
+    <string name="location_unset">تم إلغاء تعيين الموقع</string>
+    <string name="no_internet">لا يوجد اتصال بالإنترنت</string>
+    <string name="getlocation_desc">الحصول على الموقع الحالي</string>
+    <string name="addfavorite_desc">إضافة إلى المفضلة</string>
+    <string name="error_xposed_module_missing">وحدة Xposed غير مفعّلة</string>
+    <string name="error_xposed_module_missing_desc">فعّل هذه الوحدة من تطبيق LSPosed</string>
+    <string name="about">حول التطبيق</string>
+    <string name="download_manager_description">جارٍ تنزيل التحديث</string>
+    <string name="update_button">تحديث</string>
+    <string name="update_available">يتوفر تحديث</string>
+    <string name="bs_update_download_failed">فشل</string>
+    <string name="update_now">تحديث الآن</string>
+    <string name="update_ignore">تجاهل هذا التحديث</string>
+    <string name="update_remind_later">ذكّرني لاحقًا</string>
+    <string name="up_to_date">أنت تستخدم أحدث إصدار</string>
+    <string name="check_now_title">التحقق من التحديثات الآن</string>
+    <string name="check_now_summary">التحقق من وجود إصدار أحدث على GitHub</string>
+    <string name="add_fav_dialog_title">إضافة إلى المفضلة</string>
+    <string name="dialog_button_add">إضافة</string>
+    <string name="location_not_select">لم يتم اختيار موقع</string>
+    <string name="save">حفظ</string>
+    <string name="xposed">Xposed</string>
+    <string name="settings">الإعدادات</string>
+    <string name="settings_of_accuracy">الدقة</string>
+    <string name="preference_category_general">عام</string>
+    <string name="enter_valid_input">أدخل رقمًا صحيحًا</string>
+    <string name="delete_favorite_item">حذف من المفضلة</string>
+    <string name="title_activity_settings">الإعدادات</string>
+    <string name="check_update">التحقق من التحديثات</string>
+    <string name="check_update_summary">التحقق تلقائيًا من أحدث إصدار على GitHub</string>
+    <string name="enable_joystick">استخدام عصا التحكم</string>
+    <string name="enable_joystick_summary">تحكّم في موقعك باستخدام عصا التحكم (تجريبي)</string>
+    <string name="advanced_hook">اعتراض الموقع على مستوى النظام</string>
+    <string name="advanced_summary">اعتراض النظام لتعيين الموقع بشكل أفضل (يتطلب إعادة تشغيل)</string>
+    <string name="random_position">موقع عشوائي</string>
+    <string name="random_position_summary">استخدام موقع عشوائي حول الموقع المحدد</string>
+
+    <!-- فئات الإعدادات -->
+    <string name="category_location">الموقع</string>
+    <string name="category_altitude">الارتفاع</string>
+    <string name="category_movement">الحركة</string>
+    <string name="category_targeting">التطبيقات المستهدفة</string>
+    <string name="category_wifi">هوية الواي فاي</string>
+    <string name="category_external">التحكم الخارجي</string>
+    <string name="category_advanced">إعدادات متقدمة</string>
+    <string name="category_data">المواقع المحفوظة</string>
+
+    <!-- الموقع -->
+    <string name="setting_randomize_radius">نطاق العشوائية</string>
+    <string name="setting_randomize_radius_summary">المسافة التي قد يبتعدها الموقع المُبلَّغ عنه عن النقطة المحددة، بالأمتار. تُستخدم فقط عند تفعيل \"موقع عشوائي\".</string>
+    <string name="setting_horizontal_accuracy">الدقة الأفقية</string>
+    <string name="setting_horizontal_accuracy_summary">مدى الدقة التي يدّعيها الموقع المُبلَّغ عنه، بالأمتار.</string>
+    <string name="setting_vertical_accuracy">الدقة الرأسية</string>
+    <string name="setting_vertical_accuracy_summary">دقة قيمة الارتفاع المُبلَّغ عنها، بالأمتار. عند الإيقاف تبقى القيمة الأصلية.</string>
+
+    <!-- الارتفاع -->
+    <string name="setting_altitude">الارتفاع</string>
+    <string name="setting_altitude_summary">الارتفاع فوق المجسم المرجعي، بالأمتار. كان يُبلَّغ عنه دائمًا بالقيمة صفر، وهي علامة واضحة على التزييف.</string>
+    <string name="setting_msl">الارتفاع فوق سطح البحر</string>
+    <string name="setting_msl_summary">الارتفاع فوق متوسط مستوى سطح البحر، بالأمتار. يعمل على أندرويد 14 فأحدث فقط.</string>
+    <string name="setting_msl_accuracy">دقة الارتفاع فوق سطح البحر</string>
+    <string name="setting_msl_accuracy_summary">دقة قيمة الارتفاع فوق سطح البحر، بالأمتار.</string>
+
+    <!-- الحركة -->
+    <string name="setting_speed">السرعة</string>
+    <string name="setting_speed_summary">السرعة المُبلَّغ عنها أثناء ثبات الموقع، بالكيلومتر في الساعة. أما أثناء تحريك الموقع عبر مسار أو عصا التحكم فتُستخدم السرعة الفعلية المحسوبة.</string>
+    <string name="setting_speed_accuracy">دقة السرعة</string>
+    <string name="setting_speed_accuracy_summary">دقة قيمة السرعة المُبلَّغ عنها، بالكيلومتر في الساعة.</string>
+
+    <!-- التطبيقات المستهدفة -->
+    <string name="setting_target_apps">التطبيقات المستهدفة</string>
+    <string name="setting_target_apps_summary">اختر التطبيقات التي ستتلقى الموقع المزيّف</string>
+    <string name="setting_spoof_all">تزييف الموقع لكل التطبيقات في النطاق</string>
+    <string name="setting_spoof_all_summary">عند التفعيل يتلقى كل تطبيق تُحمَّل فيه الوحدة الموقع المزيّف. أوقفه لاستخدام قائمة التطبيقات المستهدفة بدلاً من ذلك.</string>
+    <string name="filter_user_apps">تطبيقات المستخدم</string>
+    <string name="filter_system_apps">تطبيقات النظام</string>
+    <string name="target_apps_empty">لا توجد تطبيقات مطابقة</string>
+    <string name="target_apps_scope_failed">تعذّر تغيير نطاق الوحدة: %1$s</string>
+    <string name="target_apps_no_service">خدمة Xposed غير متاحة — هل الوحدة مفعّلة؟</string>
+    <string name="target_apps_selected">%1$d محدد</string>
+
+    <!-- الواي فاي -->
+    <string name="setting_wifi_identity">تزييف هوية الواي فاي</string>
+    <string name="setting_wifi_identity_summary">يُبلِّغ عن نقطة وصول وهمية. الواي فاي وسيلة شائعة للتحقق من صحة موقع GPS: موقع مزيّف بجوار شبكتك الحقيقية يسهل كشفه.</string>
+    <string name="setting_wifi_ssid">اسم الشبكة (SSID)</string>
+    <string name="setting_wifi_bssid">عنوان الشبكة (BSSID)</string>
+    <string name="setting_wifi_rssi">قوة الإشارة (dBm)</string>
+
+    <!-- إعدادات متقدمة -->
+    <string name="setting_fake_gnss">بيانات أقمار صناعية مزيّفة</string>
+    <string name="setting_fake_gnss_summary">يُبلِّغ عن مجموعة أقمار صناعية مُختلَقة لكنها منطقية وتطابق الموقع المزيّف. بدون ذلك قد يلاحظ التطبيق وصول موقع صالح دون أي أقمار صناعية خلفه.</string>
+    <string name="setting_block_geofence">حظر السياجات الجغرافية</string>
+    <string name="setting_block_geofence_summary">يمنع التطبيقات من تسجيل تنبيهات مرتبطة بالموقع قد تُفعَّل عند موقعك الحقيقي.</string>
+    <string name="setting_hide_toast">إخفاء رسالة \"التزييف مُفعّل\"</string>
+    <string name="setting_hide_toast_summary">تظهر افتراضيًا رسالة قصيرة داخل كل تطبيق معترَض تؤكد عمل الوحدة. فعّل هذا الخيار لإخفائها.</string>
+    <string name="setting_broadcast">السماح بالتحكم الخارجي</string>
+    <string name="setting_broadcast_summary">يتيح للتطبيقات الأخرى ولـ ADB بدء التزييف وإيقافه وتعيين الموقع عبر البث. معطّل افتراضيًا. عند تفعيله يمكن لأي تطبيق على الجهاز يعرف الأمر أن يغيّر موقعك.</string>
+    <string name="setting_verbose_log">سجلّات تفصيلية</string>
+    <string name="setting_verbose_log_summary">يسجّل كل موقع مزيّف. مفيد للتشخيص، لكنه كثير الضجيج.</string>
+    <string name="setting_language">اللغة</string>
+
+    <!-- النسخ الاحتياطي للمفضلة -->
+    <string name="setting_favorites_export">تصدير المفضلة</string>
+    <string name="setting_favorites_export_summary">احفظ مواقعك المفضلة في ملف يمكنك الاحتفاظ به أو نقله إلى جهاز آخر</string>
+    <string name="setting_favorites_import">استيراد المفضلة</string>
+    <string name="setting_favorites_import_summary">أضف مواقع من ملف سبق تصديره. تُتجاهَل المواقع الموجودة لديك بالفعل.</string>
+    <string name="favorites_exported">تم تصدير %1$d من المواقع</string>
+    <string name="favorites_imported">تم استيراد %1$d من المواقع</string>
+    <string name="favorites_transfer_failed">تعذّرت قراءة الملف أو الكتابة إليه</string>
+
+    <!-- تحذير اعتراض النظام -->
+    <string name="system_hooks_warning_title">تفعيل الاعتراض على مستوى النظام؟</string>
+    <string name="system_hooks_warning_message">يغيّر هذا موقعك من المصدر، فتراه كل التطبيقات على الهاتف — بما فيها التطبيقات التي تتحقق مما إذا كان يجري اعتراضها.\n\nوهو أيضًا الخيار الأكثر خطورة. إذا حدث خطأ ما فستُعاد تشغيل واجهة الهاتف: تُظلم الشاشة، وتظهر حركة الإقلاع، ثم تعود بعد نحو ٣٠ ثانية. لن تفقد أي بيانات، لكن ذلك قد يحدث دون سابق إنذار.\n\nإذا بدأ هذا بالحدوث، أعِد إيقاف هذا الخيار، أو أزل \"إطار النظام\" من نطاق الوحدة في LSPosed.\n\nيتطلب هذا إعادة تشغيل الجهاز ليصبح ساري المفعول.</string>
+    <string name="system_hooks_warning_confirm">تفعيله</string>
+
+    <!-- أوضاع القيم -->
+    <string name="mode_off">إيقاف — دون تغيير</string>
+    <string name="mode_fixed">قيمة ثابتة</string>
+    <string name="mode_auto">تلقائي — قيم واقعية</string>
+    <string name="mode_summary_auto">يختار الوضع التلقائي قيمًا يُبلِّغ عنها جهاز GPS حقيقي، تتغيّر ببطء وتبقى متسقة مع بقية القيم.</string>
+
+    <!-- متنوعة -->
+    <string name="settings_search_hint">البحث في الإعدادات</string>
+    <string name="settings_reset">إعادة التعيين إلى الوضع الافتراضي</string>
+    <string name="settings_reset_message">هل تريد إعادة كل الإعدادات في هذه الشاشة إلى قيمها الأصلية؟ لن تتأثر مواقعك المحفوظة.</string>
+    <string name="settings_info">ما وظيفة هذا الخيار؟</string>
+    <string name="action_ok">موافق</string>
+    <string name="action_cancel">إلغاء</string>
+    <string name="language_system">حسب النظام</string>
+    <string name="setting_bearing">اتجاه الحركة</string>
+    <string name="setting_bearing_summary">الاتجاه الذي يُبلَّغ عن تحرك الجهاز نحوه، بالدرجات. يتبع الوضع التلقائي حركتك الفعلية ويحتفظ بآخر اتجاه لفترة قصيرة بعد التوقف.</string>
+    <string name="setting_bearing_accuracy">دقة الاتجاه</string>
+    <string name="setting_bearing_accuracy_summary">مدى دقة الاتجاه المُبلَّغ عنه، بالدرجات. يكون الوضع التلقائي أقل دقة عند شبه السكون وأدق أثناء الحركة، تمامًا كالأجهزة الحقيقية.</string>
+    <string name="filter_selected_apps">المحددة</string>
+    <string name="badge_hooked">معترَض</string>
+    <string name="cd_more_options">خيارات إضافية</string>
+    <string name="menu_add_scope">إضافة إلى النطاق</string>
+    <string name="menu_remove_scope">إزالة من النطاق</string>
+    <string name="menu_app_info">معلومات التطبيق</string>
+    <string name="scope_added">تمت إضافة %1$s إلى النطاق \u2014 أعد فتحه ليصبح ساريًا</string>
+    <string name="scope_removed">تمت إزالة %1$s من النطاق</string>
+    <string name="favorite_name_hint">الاسم</string>
+    <string name="favorite_note_hint">ملاحظة (اختياري)</string>
+    <string name="stops_title">محطات (اختياري)</string>
+    <string name="stops_hint">واحدة في كل سطر: خط العرض، خط الطول</string>
+    <string name="draw_route_hint">انقر على الخريطة لإضافة نقاط المسار</string>
+    <string name="draw_undo">تراجع</string>
+    <string name="draw_done">تم</string>
+    <string name="draw_route_btn">ارسم المسار على الخريطة</string>
+    <string name="route_title">مسار تلقائي</string>
+    <string name="route_start_point">نقطة البداية</string>
+    <string name="route_end_point">نقطة النهاية</string>
+    <string name="route_speed">السرعة</string>
+    <string name="route_duration">المدة (اختياري)</string>
+    <string name="route_repeat">تكرار المسار</string>
+    <string name="route_start_nav">بدء التنقل</string>
+    <string name="route_started">بدأ المسار</string>
+    <string name="search_results_count">%1$d نتيجة \u2014 انقر على واحدة</string>
+    <string name="category_search">البحث</string>
+    <string name="floating_map_title">خريطة عائمة</string>
+    <string name="floating_resize">تغيير الحجم</string>
+    <string name="setting_floating_map">نافذة الخريطة العائمة</string>
+    <string name="setting_floating_map_summary">إظهار خريطة متحركة وقابلة لتغيير الحجم فوق التطبيقات لتغيير الموقع مباشرة</string>
+    <string name="select_all">تحديد كل النتائج</string>
+    <string name="unselect_all">إلغاء تحديد كل النتائج</string>
+    <string name="bulk_needs_search">اكتب بحثًا أولاً</string>
+    <string name="bulk_selected">تم تحديد %1$d تطبيق</string>
+    <string name="bulk_unselected">تم إلغاء تحديد %1$d تطبيق</string>
+    <string name="about_info"><![CDATA[مُحدِّد موقع GPS يعتمد على إطار Xposed.<br><br><a href="https://github.com/Android1500">@Android1500</a><br><a href="https://github.com/jqssun">@jqssun</a><br><a href="https://github.com/Dphpvp">@Dphpvp</a><br><a href="https://github.com/IslamIssa1997">@IslamIssa1997</a><br><br><a href="https://github.com/IslamIssa1997/android-gps-setter">Github</a>]]></string>
+    <string name="floating_map_opened">تم فتح الخريطة العائمة</string>
+    <string name="floating_map_closed">تم إغلاق الخريطة العائمة</string>
+
+    <!-- Navigation / route window + general (added for full Arabic coverage) -->
+    <string name="address">الولايات المتحدة</string>
+    <string name="drawer_open">فتح</string>
+    <string name="drawer_close">إغلاق</string>
+    <string name="app_update_failed">فشل التحديث</string>
+    <string name="dark_theme">المظهر الداكن</string>
+    <string name="auto_navigation">التنقل التلقائي</string>
+    <string name="auto_navigation_desc">بدء مسار تنقل تلقائي</string>
+    <string name="route_name">اسم المسار</string>
+    <string name="starting_point">نقطة البداية</string>
+    <string name="end_point">نقطة النهاية</string>
+    <string name="use_current_location">استخدام الموقع الحالي</string>
+    <string name="select_on_map">تحديد على الخريطة</string>
+    <string name="speed">السرعة</string>
+    <string name="duration_optional">المدة (اختياري)</string>
+    <string name="repeat_route">تكرار المسار</string>
+    <string name="start_navigation">بدء التنقل</string>
+    <string name="stop_navigation">إيقاف التنقل</string>
+    <string name="pause_navigation">إيقاف مؤقت</string>
+    <string name="resume_navigation">استئناف</string>
+    <string name="navigation_active">التنقل نشط</string>
+    <string name="navigation_paused">التنقل متوقف مؤقتًا</string>
+    <string name="navigation_stopped">تم إيقاف التنقل</string>
+    <string name="current_position">الموقع الحالي</string>
+    <string name="progress">التقدم</string>
+    <string name="elapsed_time">المنقضي</string>
+    <string name="remaining_time">المتبقي</string>
+    <string name="invalid_coordinates">إحداثيات غير صالحة</string>
+    <string name="route_stopped">تم إيقاف التنقل</string>
+    <string name="route_paused">التنقل متوقف مؤقتًا</string>
+    <string name="route_resumed">تم استئناف التنقل</string>
+    <string name="use_spoofed_location">استخدام الموقع المزيّف</string>
+    <string name="no_real_location">الموقع الحقيقي غير متاح</string>
+</resources>

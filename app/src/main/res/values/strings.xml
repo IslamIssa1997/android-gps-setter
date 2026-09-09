@@ -1,0 +1,231 @@
+<resources>
+
+    <!-- Home -->
+    <string name="app_name">GPS Setter</string>
+    <string name="search">Search</string>
+    <string name="address">United States</string>
+    <string name="favorites">Favorites</string>
+    <string name="address_not_found">Address not found</string>
+    <string name="cant_save">Can\'t save</string>
+    <string name="location_set">Location set</string>
+    <string name="title">Location set notification</string>
+    <string name="des">Show notification when location is set</string>
+    <string name="location_unset">Location unset</string>
+    <string name="no_internet">No Internet</string>
+    <string name="getlocation_desc">Get current location</string>
+    <string name="addfavorite_desc">Add favorite</string>
+
+    <!-- Errors -->
+    <string name="error_xposed_module_missing">Xposed module is not enabled</string>
+    <string name="error_xposed_module_missing_desc">Enable this module in LSPosed Manager</string>
+
+    <!-- About -->
+    <string name="about">About</string>
+    <string name="about_info"><![CDATA[A GPS setter based on the Xposed framework.<br><br><a href="https://github.com/Android1500">@Android1500</a><br><a href="https://github.com/jqssun">@jqssun</a><br><a href="https://github.com/Dphpvp">@Dphpvp</a><br><a href="https://github.com/IslamIssa1997">@IslamIssa1997</a><br><br><a href="https://github.com/IslamIssa1997/android-gps-setter">Github</a>]]></string>
+
+    <!-- Update -->
+    <string name="download_manager_description">Downloading update</string>
+    <string name="update_button">Update</string>
+    <string name="update_available">Update available</string>
+    <string name="bs_update_download_failed">Failed</string>
+    <string name="update_now">Update now</string>
+    <string name="update_ignore">Ignore this update</string>
+    <string name="update_remind_later">Remind me later</string>
+    <string name="up_to_date">You\'re on the latest version</string>
+    <string name="check_now_title">Check for updates now</string>
+    <string name="check_now_summary">Check GitHub for a newer release</string>
+
+
+    <!-- Dialog -->
+    <string name="add_fav_dialog_title">Add favorite</string>
+    <string name="dialog_button_add">Add</string>
+    <string name="location_not_select">Location not selected</string>
+    <string name="save">Save</string>
+
+    <!-- SettingActivity -->
+    <string name="xposed">Xposed</string>
+    <string name="settings">Settings</string>
+    <string name="settings_of_accuracy">Accuracy</string>
+    <string name="preference_category_general">General</string>
+    <string name="enter_valid_input">Enter a valid number</string>
+    <string name="delete_favorite_item">Delete favorite</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="check_update">Check for updates</string>
+    <string name="check_update_summary">Automatically check the latest version from GitHub</string>
+    <string name="enable_joystick">Use joystick</string>
+    <string name="enable_joystick_summary">Control your location with a joystick (experimental)</string>
+    <string name="advanced_hook">Hook system location</string>
+    <string name="advanced_summary">Hook system for better location setting (reboot required)</string>
+    <string name="random_position">Random location</string>
+    <string name="random_position_summary">Use a random location around the set location</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="app_update_failed">Update failed</string>
+    <string name="dark_theme">Dark theme</string>
+
+    <!-- Auto Navigation -->
+    <string name="auto_navigation">Auto Navigation</string>
+    <string name="auto_navigation_desc">Start auto navigation route</string>
+    <string name="route_name">Route Name</string>
+    <string name="starting_point">Starting Point</string>
+    <string name="end_point">End Point</string>
+    <string name="use_current_location">Use Current Location</string>
+    <string name="use_spoofed_location">Use Spoofed Location</string>
+    <string name="no_real_location">Real location unavailable</string>
+    <string name="select_on_map">Select on Map</string>
+    <string name="speed">Speed</string>
+    <string name="duration_optional">Duration (Optional)</string>
+    <string name="repeat_route">Repeat Route</string>
+    <string name="start_navigation">Start Navigation</string>
+    <string name="stop_navigation">Stop Navigation</string>
+    <string name="pause_navigation">Pause</string>
+    <string name="resume_navigation">Resume</string>
+    <string name="navigation_active">Navigation Active</string>
+    <string name="navigation_paused">Navigation Paused</string>
+    <string name="navigation_stopped">Navigation Stopped</string>
+    <string name="current_position">Current Position</string>
+    <string name="progress">Progress</string>
+    <string name="elapsed_time">Elapsed</string>
+    <string name="remaining_time">Remaining</string>
+    <string name="invalid_coordinates">Invalid coordinates</string>
+    <string name="route_started">Navigation started</string>
+    <string name="route_stopped">Navigation stopped</string>
+    <string name="route_paused">Navigation paused</string>
+    <string name="route_resumed">Navigation resumed</string>
+
+
+    <!-- Settings: categories -->
+    <string name="category_location">Location</string>
+    <string name="category_altitude">Altitude</string>
+    <string name="category_movement">Movement</string>
+    <string name="category_targeting">Targeting</string>
+    <string name="category_wifi">Wi\u2011Fi identity</string>
+    <string name="category_external">External control</string>
+    <string name="category_advanced">Advanced</string>
+
+    <!-- Settings: location -->
+    <string name="setting_randomize_radius">Randomisation radius</string>
+    <string name="setting_randomize_radius_summary">How far the reported position may wander from the pin, in metres. Only used when \"Random position\" is on.</string>
+    <string name="setting_vertical_accuracy">Vertical accuracy</string>
+    <string name="setting_vertical_accuracy_summary">Reported accuracy of the altitude value, in metres. Left off, the original value is kept.</string>
+
+    <!-- Settings: altitude -->
+    <string name="setting_altitude">Altitude</string>
+    <string name="setting_altitude_summary">Height above the ellipsoid, in metres. Previously always reported as 0, which is an obvious tell.</string>
+    <string name="setting_msl">Mean sea level altitude</string>
+    <string name="setting_msl_summary">Height above mean sea level, in metres. Android 14 and newer only.</string>
+    <string name="setting_msl_accuracy">Mean sea level accuracy</string>
+    <string name="setting_msl_accuracy_summary">Reported accuracy of the mean sea level value, in metres.</string>
+
+    <!-- Settings: movement -->
+    <string name="setting_speed">Speed</string>
+    <string name="setting_speed_summary">Speed reported while the position is not moving, in km/h. While a route or the joystick is driving the position, the real computed speed is used instead.</string>
+    <string name="setting_speed_accuracy">Speed accuracy</string>
+    <string name="setting_speed_accuracy_summary">Reported accuracy of the speed value, in km/h.</string>
+
+    <!-- Settings: targeting -->
+    <string name="setting_target_apps">Target apps</string>
+    <string name="setting_target_apps_summary">Choose which apps receive the fake location</string>
+    <string name="setting_spoof_all">Spoof every app in scope</string>
+    <string name="setting_spoof_all_summary">When on, every app the framework loads the module into gets the fake location. Turn off to use the target apps list instead.</string>
+
+    <!-- Settings: wifi -->
+    <string name="setting_wifi_identity">Spoof Wi\u2011Fi identity</string>
+    <string name="setting_wifi_identity_summary">Reports a fake access point. Wi\u2011Fi is a common cross\u2011check against GPS: a spoofed position next to your real network is easy to spot.</string>
+    <string name="setting_wifi_ssid">Network name (SSID)</string>
+    <string name="setting_wifi_bssid">Network address (BSSID)</string>
+    <string name="setting_wifi_rssi">Signal strength (dBm)</string>
+
+    <!-- Settings: advanced -->
+    <string name="setting_fake_gnss">Fake satellite data</string>
+    <string name="setting_fake_gnss_summary">Reports a made\u2011up but plausible set of satellites matching the fake position. Without this an app can notice that a valid fix arrived with no satellites behind it.</string>
+    <string name="setting_block_geofence">Block geofences</string>
+    <string name="setting_block_geofence_summary">Stops apps registering location\u2011triggered alerts that would fire on your real position.</string>
+    <string name="setting_hide_toast">Hide \"spoofing active\" message</string>
+    <string name="setting_hide_toast_summary">By default a short message appears inside each hooked app confirming the module is working. Turn on to hide it.</string>
+    <string name="setting_broadcast">Allow external control</string>
+    <string name="setting_broadcast_summary">Lets other apps and ADB start, stop and set the location by broadcast. Off by default. Once on, any app on this device that knows the command can move your location.</string>
+    <string name="setting_verbose_log">Detailed logging</string>
+    <string name="setting_verbose_log_summary">Logs every faked position. Useful for diagnosing, very noisy otherwise.</string>
+    <string name="setting_language">Language</string>
+
+    <!-- System hooks warning -->
+    <string name="system_hooks_warning_title">Turn on system\u2011level hooks?</string>
+    <string name="system_hooks_warning_message">This changes your location at the source, so every app on the phone sees it \u2014 including apps that check whether they are being hooked.
+
+It is also the riskiest option. If something goes wrong, your phone\u2019s interface restarts: the screen goes black, you see the boot animation, and it returns after about 30 seconds. You will not lose any data, but it can happen without warning.
+
+If that starts happening, turn this switch back off, or remove System Framework from the module\u2019s scope in LSPosed.
+
+A reboot is needed for this to take effect.</string>
+    <string name="system_hooks_warning_confirm">Turn it on</string>
+
+    <!-- Settings: misc -->
+    <string name="settings_search_hint">Search settings</string>
+    <string name="settings_reset">Reset to defaults</string>
+    <string name="settings_reset_message">Return every setting on this screen to its original value? Your saved locations are not affected.</string>
+    <string name="settings_info">What does this do?</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="filter_user_apps">User apps</string>
+    <string name="filter_system_apps">System apps</string>
+    <string name="target_apps_empty">No apps match</string>
+    <string name="target_apps_scope_failed">Could not change the module scope: %1$s</string>
+    <string name="target_apps_no_service">Xposed service unavailable \u2014 is the module enabled?</string>
+    <string name="target_apps_selected">%1$d selected</string>
+    <string name="mode_off">Off \u2014 leave untouched</string>
+    <string name="mode_fixed">Fixed value</string>
+    <string name="mode_auto">Auto \u2014 realistic values</string>
+    <string name="mode_summary_auto">Auto picks values a real GPS receiver would report, drifting slowly and staying consistent with the other fields.</string>
+    <string name="setting_horizontal_accuracy">Horizontal accuracy</string>
+    <string name="setting_horizontal_accuracy_summary">How precise the reported position claims to be, in metres.</string>
+    <string name="category_data">Saved locations</string>
+    <string name="setting_favorites_export">Export favourites</string>
+    <string name="setting_favorites_export_summary">Save your favourite locations to a file you can back up or move to another device</string>
+    <string name="setting_favorites_import">Import favourites</string>
+    <string name="setting_favorites_import_summary">Add favourites from a previously exported file. Locations you already have are skipped.</string>
+    <string name="favorites_exported">Exported %1$d favourites</string>
+    <string name="favorites_imported">Imported %1$d favourites</string>
+    <string name="favorites_transfer_failed">Could not read or write that file</string>
+    <string name="language_system">Follow system</string>
+    <string name="setting_bearing">Direction of travel</string>
+    <string name="setting_bearing_summary">Which way the device is reported as heading, in degrees. Auto follows your actual movement and holds the last direction briefly after you stop.</string>
+    <string name="setting_bearing_accuracy">Direction accuracy</string>
+    <string name="setting_bearing_accuracy_summary">How precise the reported direction claims to be, in degrees. Auto is looser when nearly still and tighter when moving, like real hardware.</string>
+    <string name="filter_selected_apps">Selected</string>
+    <string name="badge_hooked">Hooked</string>
+    <string name="cd_more_options">More options</string>
+    <string name="menu_add_scope">Add to scope</string>
+    <string name="menu_remove_scope">Remove from scope</string>
+    <string name="menu_app_info">App info</string>
+    <string name="scope_added">%1$s added to scope \u2014 reopen it to take effect</string>
+    <string name="scope_removed">%1$s removed from scope</string>
+    <string name="favorite_name_hint">Name</string>
+    <string name="favorite_note_hint">Note (optional)</string>
+    <string name="stops_title">Stops (optional)</string>
+    <string name="stops_hint">One per line: latitude, longitude</string>
+    <string name="draw_route_hint">Tap the map to add route points</string>
+    <string name="draw_undo">Undo</string>
+    <string name="draw_done">Done</string>
+    <string name="draw_route_btn">Draw route on map</string>
+    <string name="route_title">Auto Route</string>
+    <string name="route_start_point">Starting Point</string>
+    <string name="route_end_point">End Point</string>
+    <string name="route_speed">Speed</string>
+    <string name="route_duration">Duration (optional)</string>
+    <string name="route_repeat">Repeat Route</string>
+    <string name="route_start_nav">Start Navigation</string>
+    <string name="search_results_count">%1$d places found \u2014 tap one</string>
+    <string name="category_search">Search</string>
+    <string name="floating_map_title">Floating map</string>
+    <string name="floating_resize">Resize</string>
+    <string name="setting_floating_map">Floating map window</string>
+    <string name="setting_floating_map_summary">Show a movable, resizable map over other apps to change location on the fly</string>
+    <string name="select_all">Select all results</string>
+    <string name="unselect_all">Unselect all results</string>
+    <string name="bulk_needs_search">Type a search first</string>
+    <string name="bulk_selected">Selected %1$d apps</string>
+    <string name="bulk_unselected">Unselected %1$d apps</string>
+    <string name="floating_map_opened">Floating map opened</string>
+    <string name="floating_map_closed">Floating map closed</string>
+</resources>

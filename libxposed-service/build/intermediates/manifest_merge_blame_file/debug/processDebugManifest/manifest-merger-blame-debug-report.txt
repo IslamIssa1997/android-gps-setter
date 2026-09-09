@@ -1,0 +1,22 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    xmlns:tools="http://schemas.android.com/tools"
+4    package="io.github.libxposed.service" >
+5
+6    <uses-sdk android:minSdkVersion="26" />
+7
+8    <application>
+8-->/home/eslam/Desktop/GPS/android-gps-setter/libxposed-service/src/main/AndroidManifest.xml:5:5-11:19
+9        <provider
+9-->/home/eslam/Desktop/GPS/android-gps-setter/libxposed-service/src/main/AndroidManifest.xml:6:9-10:54
+10            android:name="io.github.libxposed.service.XposedProvider"
+10-->/home/eslam/Desktop/GPS/android-gps-setter/libxposed-service/src/main/AndroidManifest.xml:7:13-43
+11            android:authorities="${applicationId}.XposedService"
+11-->/home/eslam/Desktop/GPS/android-gps-setter/libxposed-service/src/main/AndroidManifest.xml:8:13-65
+12            android:exported="true"
+12-->/home/eslam/Desktop/GPS/android-gps-setter/libxposed-service/src/main/AndroidManifest.xml:9:13-36
+13            tools:ignore="ExportedContentProvider" />
+13-->/home/eslam/Desktop/GPS/android-gps-setter/libxposed-service/src/main/AndroidManifest.xml:10:13-51
+14    </application>
+15
+16</manifest>

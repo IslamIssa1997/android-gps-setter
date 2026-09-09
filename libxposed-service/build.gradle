@@ -1,0 +1,36 @@
+// libxposed service + interface, vendored from https://github.com/libxposed/service (102.0.0).
+// Built from source rather than consumed as an AAR: the published artifacts declare
+// minCompileSdk=37, which would force this app onto AGP 9 / compileSdk 37.
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace = 'io.github.libxposed.service'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        consumerProguardFiles 'proguard-rules.pro'
+    }
+
+    buildFeatures {
+        buildConfig = false
+        androidResources = false
+        aidl = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError = false
+    }
+}
+
+dependencies {
+    compileOnly 'androidx.annotation:annotation:1.9.1'
+    compileOnly 'io.github.libxposed:annotation:1.0.0'
+}

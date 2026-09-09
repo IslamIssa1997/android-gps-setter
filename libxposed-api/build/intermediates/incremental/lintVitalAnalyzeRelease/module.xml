@@ -1,0 +1,18 @@
+<lint-module
+    format="1"
+    dir="/home/eslam/Desktop/GPS/android-gps-setter/libxposed-api"
+    name=":libxposed-api"
+    type="LIBRARY"
+    maven="GPS Setter:libxposed-api:unspecified"
+    agpVersion="8.13.0"
+    buildFolder="build"
+    bootClassPath="/home/eslam/Android/Sdk/platforms/android-36/android.jar:/home/eslam/Android/Sdk/build-tools/35.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="17"
+    compileTarget="android-36"
+    neverShrinking="true">
+  <lintOptions
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>
