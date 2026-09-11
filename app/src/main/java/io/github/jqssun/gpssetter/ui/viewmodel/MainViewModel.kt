@@ -108,17 +108,17 @@ class MainViewModel @Inject constructor(
                 checkUpdates.clearCachedDownloads(context)
             }
             checkUpdates.getLatestRelease().collect {
-                emit(it)
+                emit((it as? UpdateChecker.CheckResult.Available)?.update)
             }
         }
     }
 
      val update = _update.asStateFlow()
 
-    // Result of a manual "Check now": the Update if one is available (even a previously-ignored
-    // one), or null = up to date. Kept separate from [update] so it never triggers the automatic
-    // start-up prompt on screens that only want an explicit check.
-    private val _manualResult = MutableSharedFlow<UpdateChecker.Update?>()
+    // Result of a manual "Check now": Available / UpToDate / Failed. Kept separate from [update] so
+    // it never triggers the automatic start-up prompt, and so a failed check can say so honestly
+    // instead of being reported as "up to date".
+    private val _manualResult = MutableSharedFlow<UpdateChecker.CheckResult>()
     val manualResult = _manualResult.asSharedFlow()
 
     /** Manual check: forces a lookup, bypassing the disable toggle and the per-version ignore. */

@@ -266,9 +266,15 @@ class ActivitySettings : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                mainViewModel.manualResult.collect { upd ->
-                    if (upd != null) showUpdatePrompt(mainViewModel, upd)
-                    else showToast(getString(R.string.up_to_date))
+                mainViewModel.manualResult.collect { result ->
+                    when (result) {
+                        is io.github.jqssun.gpssetter.update.UpdateChecker.CheckResult.Available ->
+                            showUpdatePrompt(mainViewModel, result.update)
+                        io.github.jqssun.gpssetter.update.UpdateChecker.CheckResult.UpToDate ->
+                            showToast(getString(R.string.up_to_date))
+                        io.github.jqssun.gpssetter.update.UpdateChecker.CheckResult.Failed ->
+                            showToast(getString(R.string.update_check_failed))
+                    }
                 }
             }
         }

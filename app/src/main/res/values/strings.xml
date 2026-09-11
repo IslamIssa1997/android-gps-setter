@@ -32,6 +32,7 @@
     <string name="update_ignore">Ignore this update</string>
     <string name="update_remind_later">Remind me later</string>
     <string name="up_to_date">You\'re on the latest version</string>
+    <string name="update_check_failed">Couldn\'t check for updates — try again</string>
     <string name="check_now_title">Check for updates now</string>
     <string name="check_now_summary">Check GitHub for a newer release</string>
 

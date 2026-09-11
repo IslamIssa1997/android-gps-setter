@@ -22,6 +22,7 @@
     <string name="update_ignore">تجاهل هذا التحديث</string>
     <string name="update_remind_later">ذكّرني لاحقًا</string>
     <string name="up_to_date">أنت تستخدم أحدث إصدار</string>
+    <string name="update_check_failed">تعذّر التحقق من التحديثات — حاول مرة أخرى</string>
     <string name="check_now_title">التحقق من التحديثات الآن</string>
     <string name="check_now_summary">التحقق من وجود إصدار أحدث على GitHub</string>
     <string name="add_fav_dialog_title">إضافة إلى المفضلة</string>
