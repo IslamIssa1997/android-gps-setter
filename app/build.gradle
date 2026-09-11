@@ -1,0 +1,168 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
+    id 'com.google.devtools.ksp'
+}
+
+// Version can be overridden by CI (env VERSION_NAME / VERSION_CODE) so each build/release is
+// stamped distinctly; falls back to these defaults for local builds.
+def tagName = System.getenv('VERSION_NAME') ?: '2.0.0'
+def ciVersionCode = System.getenv('VERSION_CODE')
+
+// local.properties holds the SDK path, signing credentials and API keys. It is git-ignored and
+// may legitimately be missing (fresh clone, CI); everything below degrades gracefully instead of
+// throwing at configuration time.
+def localProps = new Properties()
+def localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+    localPropsFile.withInputStream { localProps.load(it) }
+}
+def hasSigningConfig = ['keyAlias', 'keyPassword', 'storeFile', 'storePassword']
+        .every { localProps.getProperty(it) }
+
+android {
+    compileSdk 36
+    defaultConfig {
+        applicationId "com.islam.gps"
+        minSdk 27
+        targetSdk 34
+        versionCode ciVersionCode ? ciVersionCode.toInteger() : 20000
+        versionName tagName
+        // testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "TAG_NAME", "\"${tagName}\"")
+
+        // API keys live in local.properties (git-ignored). No hardcoded fallbacks: shipping the
+        // upstream developer's keys leaks them, and the Maps key is locked to that app's signature
+        // so it would render a blank map here anyway. A missing key just means that feature is off.
+        manifestPlaceholders = [MAPS_API_KEY: localProps.getProperty('MAPS_API_KEY', '')]
+        buildConfigField("String", "ORS_API_KEY", "\"${localProps.getProperty('ORS_API_KEY', '')}\"")
+        // Google Places (POI) key. Optional; the Places source is skipped when absent. This can be
+        // the Maps key IF Places API is enabled and the key is not Android-restricted.
+        // No fallback to the Maps key: it is Android-restricted and Google Places is a web call,
+        // so it would just fail every search. Google Places is used only if a dedicated key is set.
+        buildConfigField("String", "PLACES_API_KEY", "\"${localProps.getProperty('PLACES_API_KEY', '')}\"")
+    }
+    splits {
+        abi {
+            enable = true
+            reset()
+            include "arm64-v8a"
+            universalApk = false
+        }
+    }
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
+    signingConfigs {
+        if (hasSigningConfig) {
+            release {
+                keyAlias localProps.getProperty('keyAlias')
+                keyPassword localProps.getProperty('keyPassword')
+                storeFile file(localProps.getProperty('storeFile'))
+                storePassword localProps.getProperty('storePassword')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Left unsigned when local.properties has no signing credentials, rather than failing
+            // the build. Sign manually with apksigner in that case.
+            if (hasSigningConfig) {
+                signingConfig = signingConfigs.release
+            }
+        }
+        debug {
+            minifyEnabled false
+            // Sign debug with the real key too. The Google Maps key is restricted to the app's
+            // package name + signing SHA-1, so a debug build signed with the auto-generated debug
+            // keystore gets "Authorization failure" and a blank grey map. Using one certificate
+            // everywhere also means debug and release builds replace each other without an
+            // uninstall.
+            if (hasSigningConfig) {
+                signingConfig = signingConfigs.release
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
+
+    flavorDimensions += "version"
+    productFlavors {
+        full {
+            dimension "version"
+            isDefault = true
+        }
+    }
+
+    packaging {
+        resources {
+            merges += 'META-INF/xposed/*'
+        }
+    }
+
+    namespace = 'io.github.jqssun.gpssetter'
+}
+
+dependencies {
+
+    // Modern Xposed API (libxposed). The framework provides these classes at runtime,
+    // so the API is compileOnly; :libxposed-api vendors the upstream sources.
+    compileOnly project(':libxposed-api')
+    // Module <-> framework service: remote preferences and module-active state.
+    implementation project(':libxposed-service')
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha01'
+    implementation 'androidx.activity:activity-ktx:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha05'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+    implementation "androidx.drawerlayout:drawerlayout:1.2.0-alpha01"
+    implementation 'androidx.room:room-runtime:2.5.0'
+    implementation 'androidx.room:room-ktx:2.5.0'
+    ksp 'androidx.room:room-compiler:2.5.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha04"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.0-alpha04"
+
+    implementation "com.google.android.material:material:1.12.0"
+    implementation "com.google.dagger:hilt-android:2.55"
+    ksp "com.google.dagger:hilt-compiler:2.55"
+
+    // timber
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // okhttp for routing service
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
+    implementation 'com.github.lukkass222:virtual-joystick-android:1.13.5'
+
+    // Open Location Code (Plus Codes) -- offline decoding, no key.
+    implementation 'com.google.openlocationcode:openlocationcode:1.0.4'
+}

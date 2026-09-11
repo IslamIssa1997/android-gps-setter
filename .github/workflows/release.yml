@@ -1,0 +1,130 @@
+name: Release
+
+# Manually cut a GitHub Release: builds a signed APK with the version you enter and publishes it as
+# a release, with the APK attached. This is what the in-app updater reads
+# (api.github.com/repos/.../releases/latest), so the repo must stay public.
+#
+# It also updates CHANGELOG.md automatically: a new "## [version] — date" section is prepended,
+# committed back to main, and used as the release description. The notes are GitHub's own
+# auto-generated release notes ("What's Changed" + contributors + compare link), the same text the
+# "Generate release notes" button produces -- unless you type your own in the notes box.
+#
+# Manual only -- you choose when to release and with which version.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version, e.g. 2.1.0'
+        required: true
+      notes:
+        description: 'Release notes (optional). Leave empty to auto-generate them GitHub-style.'
+        required: false
+        type: string
+      prerelease:
+        description: 'Mark as pre-release?'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # needed to create the release/tag and to push the CHANGELOG commit
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # Set a default so the runner's git doesn't print the "using 'master'…" hint during checkout.
+      - name: Quiet git default-branch hint
+        run: git config --global init.defaultBranch main
+
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0   # full history + tags, so the changelog can diff against the last tag
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Update CHANGELOG and prepare release notes
+        env:
+          NOTES: ${{ github.event.inputs.notes }}
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ -n "$NOTES" ]; then
+            # You typed your own notes -- use them verbatim.
+            printf '%s\n' "$NOTES" > notes.txt
+          else
+            # Ask GitHub to auto-generate the notes ("What's Changed" + contributors + compare
+            # link), the same text the release page's "Generate release notes" button produces.
+            gh api --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+              -f tag_name="v${{ github.event.inputs.version }}" \
+              -f target_commitish="${{ github.ref_name }}" \
+              --jq '.body' > notes.txt || true
+          fi
+          # If notes.txt is empty (e.g. the API call failed), the script falls back to commit subjects.
+          bash scripts/update-changelog.sh "${{ github.event.inputs.version }}" notes.txt
+          rm -f notes.txt
+
+      - name: Commit updated CHANGELOG
+        run: |
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "No CHANGELOG change to commit."
+          else
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add CHANGELOG.md
+            git commit -m "chore: update changelog for v${{ github.event.inputs.version }} [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
+
+      - name: Write local.properties and keystore from secrets
+        env:
+          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
+          ORS_API_KEY: ${{ secrets.ORS_API_KEY }}
+          PLACES_API_KEY: ${{ secrets.PLACES_API_KEY }}
+          SIGNING_KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          echo "$SIGNING_KEYSTORE_BASE64" | base64 -d > "$GITHUB_WORKSPACE/keystore.p12"
+          {
+            echo "sdk.dir=$ANDROID_SDK_ROOT"
+            echo "MAPS_API_KEY=$MAPS_API_KEY"
+            echo "ORS_API_KEY=$ORS_API_KEY"
+            echo "PLACES_API_KEY=$PLACES_API_KEY"
+            echo "storeFile=$GITHUB_WORKSPACE/keystore.p12"
+            echo "storePassword=$SIGNING_STORE_PASSWORD"
+            echo "keyAlias=$SIGNING_KEY_ALIAS"
+            echo "keyPassword=$SIGNING_KEY_PASSWORD"
+          } > local.properties
+
+      - name: Build release APK
+        env:
+          VERSION_NAME: ${{ github.event.inputs.version }}
+        run: |
+          # versionCode from the semver you entered: 2.1.0 -> 20100, so it always increases.
+          IFS='.' read -r MAJ MIN PAT <<< "${{ github.event.inputs.version }}"
+          export VERSION_CODE=$(( MAJ*10000 + MIN*100 + PAT ))
+          ./gradlew :app:assembleFullRelease --no-daemon
+
+      - name: Publish release with APK
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: v${{ github.event.inputs.version }}
+          target_commitish: ${{ github.ref_name }}   # tag the commit that includes the CHANGELOG update
+          body_path: release_notes.md                # just this version's section, not the whole file
+          prerelease: ${{ github.event.inputs.prerelease }}
+          files: app/build/outputs/apk/full/release/*.apk
+
+      - name: Clean up secrets
+        if: always()
+        run: rm -f local.properties keystore.p12 release_notes.md
