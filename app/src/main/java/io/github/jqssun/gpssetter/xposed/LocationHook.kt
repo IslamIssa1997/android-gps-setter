@@ -424,10 +424,16 @@ class LocationHook(
 
                 refresh("android", SYSTEM_INTERVAL)
                 val args = chain.args.toTypedArray()
-                runCatching { rewriteLocationResult(args.getOrNull(0)) }
+                val faked = runCatching { fakeLocationResult(args.getOrNull(0)) }
                     .onFailure { module.log(Log.WARN, TAG, "acceptLocationChange rewrite failed: $it") }
-                if (settings.isVerboseLogging) {
-                    module.log(Log.DEBUG, TAG, "system: delivered fake to ${pkg ?: "?"}")
+                    .getOrNull()
+                if (faked != null) {
+                    // Substitute a fresh LocationResult for THIS registration only. Never mutate the
+                    // shared original, or registrations dispatched after this one leak the fake.
+                    args[0] = faked
+                    if (settings.isVerboseLogging) {
+                        module.log(Log.DEBUG, TAG, "system: delivered fake to ${pkg ?: "?"}")
+                    }
                 }
                 chain.proceed(args)
             }
@@ -456,14 +462,44 @@ class LocationHook(
         }
     }
 
-    /** Replaces the locations inside a LocationResult without touching platform collections. */
-    private fun rewriteLocationResult(result: Any?) {
-        if (result == null) return
-        val field = result.javaClass.getDeclaredField("mLocations").apply { isAccessible = true }
-        val originals = (field.get(result) as? List<*>)?.filterIsInstance<Location>() ?: return
-        if (originals.isEmpty()) return
-        field.set(result, originals.map { fakeLocation(it) })
+    /**
+     * Builds a NEW LocationResult carrying the fake fixes, or null if there is nothing to fake.
+     *
+     * The platform dispatches ONE LocationResult instance to every registration in a single
+     * onReportLocation pass, so mutating it in place leaks the fake to every registration processed
+     * afterwards -- non-targeted apps and the system's own blue dot. Returning a fresh object keeps
+     * the spoof scoped to the one caller whose args we substitute it into.
+     */
+    private fun fakeLocationResult(result: Any?): Any? {
+        if (result == null) return null
+        val cls = result.javaClass
+        val field = cls.getDeclaredField("mLocations").apply { isAccessible = true }
+        val originals = (field.get(result) as? List<*>)?.filterIsInstance<Location>() ?: return null
+        if (originals.isEmpty()) return null
+        val fakes = originals.map { fakeLocation(it) }
+        // Prefer the platform factory. Fall back to a Parcel deep-copy so we still avoid touching the
+        // shared original on a vendor build where create(List) is absent.
+        runCatching { cls.getMethod("create", List::class.java).invoke(null, fakes) }
+            .getOrNull()?.let { return it }
+        val copy = deepCopyParcelable(result) ?: return null
+        cls.getDeclaredField("mLocations").apply { isAccessible = true }.set(copy, fakes)
+        return copy
     }
+
+    /** Independent copy of a Parcelable via a Parcel round-trip, so edits never reach the original. */
+    private fun deepCopyParcelable(obj: Any): Any? = runCatching {
+        val parcel = android.os.Parcel.obtain()
+        try {
+            (obj as android.os.Parcelable).writeToParcel(parcel, 0)
+            parcel.setDataPosition(0)
+            @Suppress("UNCHECKED_CAST")
+            val creator = obj.javaClass.getField("CREATOR")
+                .get(null) as android.os.Parcelable.Creator<Any>
+            creator.createFromParcel(parcel)
+        } finally {
+            parcel.recycle()
+        }
+    }.getOrNull()
 
     /** Geofences would otherwise fire against the device's real position. */
     private fun hookGeofencing(classLoader: ClassLoader) {
