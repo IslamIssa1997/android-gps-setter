@@ -3,6 +3,10 @@
 All notable changes to this project are documented here. Format based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project uses date-stamped versions.
 
+## [2.1.5] — 2026-09-11
+
+**Full Changelog**: https://github.com/IslamIssa1997/android-gps-setter/compare/v2.1.4...v2.1.5
+
 ## [2.1.4] — 2026-09-11
 
 **Full Changelog**: https://github.com/IslamIssa1997/android-gps-setter/compare/v2.1.1...v2.1.4
@@ -50,3 +54,4 @@ Full rebuild of the module on the modern Xposed API, plus a large feature set. P
 [2.0.0]: https://github.com/IslamIssa1997/android-gps-setter/releases
 [2.1.1]: https://github.com/IslamIssa1997/android-gps-setter/releases/tag/v2.1.1
 [2.1.4]: https://github.com/IslamIssa1997/android-gps-setter/releases/tag/v2.1.4
+[2.1.5]: https://github.com/IslamIssa1997/android-gps-setter/releases/tag/v2.1.5
